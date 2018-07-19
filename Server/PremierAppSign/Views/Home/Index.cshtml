@@ -1,0 +1,38 @@
+<div id="react-app" asp-prerender-module="wwwroot/ClientApp/dist/main-server" asp-prerender-data='new {Path = ViewBag.Path, Initial = ViewBag.Initial}'>Loading...</div>
+
+@section scripts {
+    <script src="https://apis.google.com/js/platform.js?onload=googleAsyncInit" defer></script>
+    <script>
+        window.googleAsyncInit = function () {
+            gapi.load('auth2', function () {
+                window.GoogleAuth = gapi.auth2.init({
+                    client_id: '@Configuration["Google"]'
+                });
+            });
+        }
+    </script>
+
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '@Configuration["Facebook"]',
+                cookie: true,
+                xfbml: true,
+                version: 'v2.12',
+                status: true
+            });
+            FB.AppEvents.logPageView();
+            window.FB = FB;
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <script src="~/dist/vendor.js" asp-append-version="true"></script>
+    <script src="~/dist/main-client.js" asp-append-version="true"></script>
+}
