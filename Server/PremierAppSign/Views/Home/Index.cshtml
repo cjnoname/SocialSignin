@@ -1,0 +1,61 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ticketek</title>
+    <base href="~/" />
+    <link rel="shortcut icon" href="~/images/favicon.ico">
+    <link rel="stylesheet" href="~/css/global.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- add polyfil and fetch to support IE11  -->
+    @if (Context.Request.Headers["User-Agent"].ToString().Contains("Trident"))
+    {
+        <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,Array.prototype.includes"></script>
+        <script src="//cdn.jsdelivr.net/bluebird/3.5.0/bluebird.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js"></script>
+    }
+</head>
+<body>
+    <script src="https://apis.google.com/js/platform.js?onload=googleAsyncInit" defer></script>
+    <script>
+        window.googleAsyncInit = function () {
+            gapi.load('auth2', function () {
+                window.GoogleAuth = gapi.auth2.init({
+                    client_id: '@Configuration["Google"]'
+                });
+            });
+        }
+    </script>
+
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '@Configuration["Facebook"]',
+                cookie: true,
+                xfbml: true,
+                version: 'v2.12',
+                status: true
+            });
+            FB.AppEvents.logPageView();
+            window.FB = FB;
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <div id="react-app">Loading...</div>
+    <script src="~/dist/vendor.js" asp-append-version="true"></script>
+    <script src="~/dist/client.js" asp-append-version="true"></script>
+</body>
+</html>
