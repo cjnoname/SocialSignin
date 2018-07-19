@@ -1,1 +1,0 @@
-export { fetchTheme } from './fetchTheme';
